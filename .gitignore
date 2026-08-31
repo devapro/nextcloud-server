@@ -183,3 +183,7 @@ core/js/mimetypelist.js
 /cypress
 
 /.direnv
+
+# Local overrides for the docker/ development stack
+/docker/.env
+.cursor
