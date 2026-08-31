@@ -1,0 +1,71 @@
+{
+  "browser": "Google Chrome 151 via CDP http://127.0.0.1:9222",
+  "method": "chrome connect (CDP) — no mobile MCP",
+  "verifiedAt": "2026-08-27T20:43:10.199Z",
+  "results": [
+    {
+      "id": "TC-01",
+      "title": "Successful login",
+      "status": "PASS",
+      "detail": "http://localhost:8080/index.php/apps/dashboard/ | Dashboard - Nextcloud"
+    },
+    {
+      "id": "TC-02",
+      "title": "Failed login",
+      "status": "PASS",
+      "detail": "wrong-password error shown"
+    },
+    {
+      "id": "TC-03",
+      "title": "Logout",
+      "status": "PASS",
+      "detail": "Settings menu → Log out → http://localhost:8080/index.php/login?clear=1"
+    },
+    {
+      "id": "TC-04",
+      "title": "Files list",
+      "status": "PASS",
+      "detail": "welcome.txt listed"
+    },
+    {
+      "id": "TC-05",
+      "title": "Create folder",
+      "status": "PASS",
+      "detail": "New folder in menu"
+    },
+    {
+      "id": "TC-06",
+      "title": "Upload file entry",
+      "status": "PASS",
+      "detail": "Upload files in menu"
+    },
+    {
+      "id": "TC-07",
+      "title": "Deleted files",
+      "status": "PASS",
+      "detail": "Deleted files - Files - Nextcloud"
+    },
+    {
+      "id": "TC-08",
+      "title": "Shares view",
+      "status": "PASS",
+      "detail": "Shared with others - Files - Nextcloud"
+    },
+    {
+      "id": "TC-09",
+      "title": "New account",
+      "status": "PASS",
+      "detail": "Accounts page ready"
+    },
+    {
+      "id": "TC-10",
+      "title": "Personal security",
+      "status": "PASS",
+      "detail": "Security settings ready"
+    }
+  ],
+  "summary": {
+    "pass": 10,
+    "fail": 0
+  }
+}
