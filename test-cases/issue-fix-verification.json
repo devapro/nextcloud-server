@@ -1,0 +1,20 @@
+{
+  "browser": "Google Chrome 151 via CDP http://127.0.0.1:9222",
+  "method": "chrome connect (CDP / puppeteer-core)",
+  "verifiedAt": "2026-08-27T22:04:00.000Z",
+  "results": [
+    {
+      "id": "#63512",
+      "title": "PDF viewer broken due to .json/.ftl rewrite rules",
+      "status": "PASS",
+      "detail": "locale.json and viewer.ftl return 200 (304 cached) via Chrome; without json|ftl exclusion they 404 through index.php (X-Powered-By PHP). Setup.php RewriteCond updated."
+    },
+    {
+      "id": "#63712",
+      "title": "System tag multibyte name >64 bytes → 500",
+      "status": "PASS",
+      "detail": "POST /remote.php/dav/systemtags with 63 ASCII + Cyrillic returns 201; stored name is 63 ASCII chars (mb_strcut). Unit tests testCreateOverlong* OK (2 tests)."
+    }
+  ],
+  "summary": { "pass": 2, "fail": 0 }
+}
