@@ -9,6 +9,7 @@ declare(strict_types=1);
 $expectedFiles = [
 	'.',
 	'..',
+	'.cursor',
 	'.devcontainer',
 	'.editorconfig',
 	'.envrc',

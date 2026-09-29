@@ -186,4 +186,3 @@ core/js/mimetypelist.js
 
 # Local overrides for the docker/ development stack
 /docker/.env
-.cursor
