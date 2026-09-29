@@ -63,6 +63,7 @@ $expectedFiles = [
 	'cron.php',
 	'custom.d.ts',
 	'dist',
+	'docker',
 	'eslint.config.js',
 	'flake.lock',
 	'flake.nix',
