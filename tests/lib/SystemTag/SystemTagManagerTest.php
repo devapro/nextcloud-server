@@ -251,6 +251,13 @@ class SystemTagManagerTest extends TestCase {
 		$this->assertSame('Zona circundante do Palácio Nacional da Ajuda (Jardim das Damas', $tag->getName()); // 63 characters but 64 bytes due to "á"
 	}
 
+	public function testCreateOverlongMultibyteNameDoesNotSplitCharacter(): void {
+		// 63 ASCII bytes + one 2-byte Cyrillic letter would split "б" with byte-based substr()
+		$tag = $this->tagManager->createTag(str_repeat('a', 63) . 'б', true, true);
+		$this->assertSame(str_repeat('a', 63), $tag->getName());
+		$this->assertTrue(mb_check_encoding($tag->getName(), 'UTF-8'));
+	}
+
 	#[\PHPUnit\Framework\Attributes\DataProvider('oneTagMultipleFlagsProvider')]
 	public function testGetExistingTag($name, $userVisible, $userAssignable): void {
 		$tag1 = $this->tagManager->createTag($name, $userVisible, $userAssignable);
