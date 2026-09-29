@@ -1,0 +1,84 @@
+# SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: MIT
+#
+# Advisory AI code review of pull requests.
+# Runs .github/scripts/ai-review.sh with a headless agent CLI (default:
+# claude -p; override the engine/model/budget with repository variables
+# AI_REVIEW_ENGINE, AI_REVIEW_MODEL, AI_REVIEW_MAX_DIFF_LINES, AI_REVIEW_CMD).
+# The job never fails the PR over review findings; engine problems are surfaced
+# as a workflow notice only.
+
+name: AI Review
+
+'on':
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request number to review
+        required: true
+        type: number
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ai-review-${{ github.event.pull_request.number || github.event.inputs.pr_number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: Review PR with ${{ vars.AI_REVIEW_ENGINE || 'claude' }}
+    if: ${{ github.event_name == 'workflow_dispatch'
+      || (github.event.pull_request.draft == false
+        && github.event.pull_request.user.login != 'dependabot[bot]'
+        && github.event.pull_request.user.login != 'nextcloud-command') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      PR_NUMBER: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.pr_number || github.event.pull_request.number }}
+      ENGINE: ${{ vars.AI_REVIEW_ENGINE || 'claude' }}
+      MODEL: ${{ vars.AI_REVIEW_MODEL }}
+      MAX_DIFF_LINES: ${{ vars.AI_REVIEW_MAX_DIFF_LINES || '4000' }}
+      AI_REVIEW_CMD: ${{ vars.AI_REVIEW_CMD }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+    steps:
+      - name: Checkout review tooling only
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Check credentials for the selected engine
+        id: creds
+        run: |
+          if [ "$ENGINE" = "claude" ] && [ -z "${ANTHROPIC_API_KEY:-}" ]; then
+            echo "ANTHROPIC_API_KEY secret is not configured (expected for PRs from forks). Skipping." >> "$GITHUB_STEP_SUMMARY"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Claude Code CLI
+        if: steps.creds.outputs.skip == 'false' && env.ENGINE == 'claude'
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run AI review
+        if: steps.creds.outputs.skip == 'false'
+        continue-on-error: true
+        run: bash .github/scripts/ai-review.sh
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-review-report
+          path: ai-review-report.md
+          if-no-files-found: ignore
