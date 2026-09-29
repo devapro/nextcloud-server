@@ -9,6 +9,7 @@ declare(strict_types=1);
 $expectedFiles = [
 	'.',
 	'..',
+	'.cursor',
 	'.devcontainer',
 	'.editorconfig',
 	'.envrc',
@@ -26,6 +27,7 @@ $expectedFiles = [
 	'.npmignore',
 	'.php-cs-fixer.dist.php',
 	'.pre-commit-config.yaml',
+	'.qoder',
 	'.tag',
 	'.tx',
 	'.user.ini',
