@@ -27,6 +27,7 @@ $expectedFiles = [
 	'.npmignore',
 	'.php-cs-fixer.dist.php',
 	'.pre-commit-config.yaml',
+	'.qoder',
 	'.tag',
 	'.tx',
 	'.user.ini',
