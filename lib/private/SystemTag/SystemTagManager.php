@@ -139,8 +139,8 @@ class SystemTagManager implements ISystemTagManager {
 
 	#[\Override]
 	public function getTag(string $tagName, bool $userVisible, bool $userAssignable): ISystemTag {
-		// Length of name column is 64
-		$truncatedTagName = substr($tagName, 0, 64);
+		// Length of name column is 64 bytes; cut on a UTF-8 character boundary
+		$truncatedTagName = mb_strcut($tagName, 0, 64);
 		$result = $this->selectTagQuery
 			->setParameter('name', $truncatedTagName)
 			->setParameter('visibility', $userVisible ? 1 : 0)
@@ -184,8 +184,8 @@ class SystemTagManager implements ISystemTagManager {
 			}
 		}
 
-		// Length of name column is 64
-		$truncatedTagName = substr($tagName, 0, 64);
+		// Length of name column is 64 bytes; cut on a UTF-8 character boundary
+		$truncatedTagName = mb_strcut($tagName, 0, 64);
 		$query = $this->connection->getQueryBuilder();
 		$query->insert(self::TAG_TABLE)
 			->values([
@@ -250,8 +250,8 @@ class SystemTagManager implements ISystemTagManager {
 		$beforeUpdate = array_shift($tags);
 		$newName = Util::sanitizeWordsAndEmojis($newName);
 
-		// Length of name column is 64
-		$truncatedNewName = substr($newName, 0, 64);
+		// Length of name column is 64 bytes; cut on a UTF-8 character boundary
+		$truncatedNewName = mb_strcut($newName, 0, 64);
 		$afterUpdate = new SystemTag(
 			$tagId,
 			$truncatedNewName,
